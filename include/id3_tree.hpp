@@ -67,7 +67,8 @@ namespace sv
 		/**
 		* Print the tree structure to stdout
 		*/
-		void print_tree();
+		void print_tree(std::ostream& os = std::cout);
+		void print_tree(node* r, std::ostream& os = std::cout);
 
 		/**
 		* Apply a sample to tree

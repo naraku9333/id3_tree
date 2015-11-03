@@ -1,4 +1,5 @@
 #include <node.hpp>
+#include <cmath>
 
 sv::node::node(int p, int n, int l) : children(), pos(p), neg(n), num_samples(p + n), label(l)
 {

@@ -104,7 +104,13 @@ int sv::id3_tree::apply_tree(sv::node* r, const sample s, std::ostream& os)
 	return apply_tree(r->children[i].get(), s, os);
 }
 
-void sv::id3_tree::print_tree() 
+void sv::id3_tree::print_tree(std::ostream& os) 
+{
+	
+}
+
+void sv::id3_tree::print_tree(node* r, std::ostream& os)
 {
 
 }
+
