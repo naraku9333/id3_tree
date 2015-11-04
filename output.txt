@@ -31,3 +31,16 @@
  testing node 8
  Reach leaf node: 1
  Will play tennis on such a day
+
+ ********** Testing *********
+ Testing case: Rain Mild Normal Strong
+ testing node 1
+ check child 0 with split rule feature 0
+ check child 1 with split rule feature 0
+ check child 2 with split rule feature 0
+ testing node 3
+ check child 0 with split rule feature 3
+ check child 1 with split rule feature 3
+ testing node 4
+ Reach leaf node: -1
+ Will not play tennis on such a day

@@ -69,8 +69,11 @@ int main()
 	//test tree
 	of << "\n ********** Testing *********" << std::endl;
 	of << " Testing case: Sunny Mild Normal Strong" << std::endl;
-	//int r = id3.apply_tree({ { "rain", "mild", "normal", "strong" } }, of);//don't play tennis
 	int r = id3.apply_tree({ { "sunny", "mild", "normal", "strong" } }, of);
-
 	of << " Will" << ((r == -1)?" not":"") << " play tennis on such a day" << std::endl;
+
+	of << "\n ********** Testing *********" << std::endl;
+	of << " Testing case: Rain Mild Normal Strong" << std::endl;
+	int r2 = id3.apply_tree({ { "rain", "mild", "normal", "strong" } }, of);//don't play tennis
+	of << " Will" << ((r2 == -1) ? " not" : "") << " play tennis on such a day" << std::endl;
 }
