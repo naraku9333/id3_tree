@@ -34,6 +34,7 @@ namespace sv
 		std::vector<sample> data;
 		std::vector<std::string> features;
 		std::map<std::string, std::set<std::string>> feature_to_values;
+		static int num_nodes;
 		
 	public:
 		/**

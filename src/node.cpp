@@ -1,7 +1,8 @@
 #include <node.hpp>
 #include <cmath>
 
-sv::node::node(int p, int n, int l) : children(), pos(p), neg(n), num_samples(p + n), label(l)
+sv::node::node(int p, int n, int num, int l) : 
+	children(), pos(p), neg(n), num_samples(p + n), node_number(num), label(l)
 {
 	if (num_samples <= 0) throw std::logic_error("Number of samples must be greater than zero");
 }
