@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <node.hpp>
 
+int sv::id3_tree::num_nodes = 0;
+
 sv::id3_tree::id3_tree(int p, int n, int s) : root(new node(p, n, s)) {}
 
 sv::id3_tree::id3_tree(std::vector<sample> d, std::vector<std::string> f) : data(std::move(d)), features(std::move(f))
@@ -22,7 +24,6 @@ sv::id3_tree::id3_tree(std::vector<sample> d, std::vector<std::string> f) : data
 	}
 
 	root = build_tree(data, features);
-	int x = 0;
 }
 
 void sv::id3_tree::add_node(int p, int n) { root->add_node(p, n); }
@@ -37,25 +38,26 @@ std::unique_ptr<sv::node> sv::id3_tree::build_tree(std::vector<sample> d, std::v
 	}
 
 	//steps 1, 2 and 3			
-	if (pos == d.size()) { return std::unique_ptr<node>(new node(pos, neg, 1)); }
-	else if (neg == d.size()) { return std::unique_ptr<node>(new node(pos, neg, -1)); }
+	if (pos == d.size()) { return std::unique_ptr<node>(new node(pos, neg, ++num_nodes, 1)); }
+	else if (neg == d.size()) { return std::unique_ptr<node>(new node(pos, neg, ++num_nodes, -1)); }
 
 	//step 4
-	if (f.empty()) { return std::unique_ptr<node>(new node(pos, neg, (pos > neg) ? 1 : -1)); }
+	if (f.empty()) { return std::unique_ptr<node>(new node(pos, neg, ++num_nodes, (pos > neg) ? 1 : -1)); }
 
 	std::string selected = best_gain(d, f, pos, neg);
 
-	std::unique_ptr<node> r(new node(pos, neg));
+	std::unique_ptr<node> r(new node(pos, neg, ++num_nodes));
 	r->split_rule_name = selected;
 
 	std::size_t i = std::find(features.begin(), features.end(), selected) - features.begin();//get selected feature index
 
 	for (const auto& v : feature_to_values[selected])
 	{
+		//get the samples with specified feature value
 		auto it = std::partition(d.begin(), d.end(), [&](const sample& s)->bool { return s.feature_values[i] == v; });
-		r->children.push_back(build_tree({ d.begin(), it }, f));
-		r->branches.push_back(v);
-		r->split_rule_index = i;
+		r->children.push_back(build_tree({ d.begin(), it }, f));//build subtree
+		r->branches.push_back(v);//add branch name
+		r->split_rule_index = i;//and index
 	}
 
 	f.erase(std::find(f.begin(), f.end(), selected));//remove already chosen feature
@@ -98,13 +100,46 @@ int sv::id3_tree::apply_tree(sample s, std::ostream& os)
 
 int sv::id3_tree::apply_tree(sv::node* r, const sample s, std::ostream& os)
 {
-	if (r->children.size() == 0) return r->label;
+	os << " testing node " << r->node_number << std::endl;
+	if (r->children.size() == 0) 
+	{
+		os << " Reach leaf node: " << r->label << std::endl; 
+		return r->label;
+	}
+	
+	for (std::size_t j = 0; j < r->children.size(); ++j)
+		os << " check child " << j << " with split rule feature " << r->split_rule_index << std::endl;
+
+	//get index of branch to check
 	int i = std::find(r->branches.begin(), r->branches.end(),
 		s.feature_values[r->split_rule_index]) - r->branches.begin();
+
 	return apply_tree(r->children[i].get(), s, os);
 }
 
-void sv::id3_tree::print_tree() 
+void sv::id3_tree::print_tree(std::ostream& os) 
 {
-
+	os << "\n Tree:" << std::endl;
+	print_tree(root.get(), os);
 }
+
+void sv::id3_tree::print_tree(node* r, std::ostream& os)
+{
+	if (r->children.empty())
+	{
+		os << ' ' << r->node_number << "\tLabel: " 
+			<< ((r->label == 1) ? "1 (Play Tennis)" : "-1 (Don't Play Tennis)") << std::endl;
+		return;
+	}
+	else
+	{
+		os << ' ' << r->node_number << "\tSplit feature: " << r->split_rule_index << "(" << r->split_rule_name << ")" << std::endl;
+		os << "\tchildren:" << std::endl;
+		for (std::size_t j = 0; j < r->children.size(); ++j) 
+			os << "\tchild " << j << ": node:" << r->children[j]->node_number << " branch value: " << r->branches[j] << std::endl;
+
+		for (const auto& c : r->children) print_tree(c.get(), os);
+	}
+	return;
+}
+

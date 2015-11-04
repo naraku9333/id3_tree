@@ -1,0 +1,33 @@
+
+ Tree:
+ 1	Split feature: 0(outlook)
+	children:
+	child 0: node:2 branch value: overcast
+	child 1: node:3 branch value: rain
+	child 2: node:6 branch value: sunny
+ 2	Label: 1 (Play Tennis)
+ 3	Split feature: 3(wind)
+	children:
+	child 0: node:4 branch value: strong
+	child 1: node:5 branch value: weak
+ 4	Label: -1 (Don't Play Tennis)
+ 5	Label: 1 (Play Tennis)
+ 6	Split feature: 2(humidity)
+	children:
+	child 0: node:7 branch value: high
+	child 1: node:8 branch value: normal
+ 7	Label: -1 (Don't Play Tennis)
+ 8	Label: 1 (Play Tennis)
+
+ ********** Testing *********
+ Testing case: Sunny Mild Normal Strong
+ testing node 1
+ check child 0 with split rule feature 0
+ check child 1 with split rule feature 0
+ check child 2 with split rule feature 0
+ testing node 6
+ check child 0 with split rule feature 2
+ check child 1 with split rule feature 2
+ testing node 8
+ Reach leaf node: 1
+ Will play tennis on such a day

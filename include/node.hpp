@@ -22,12 +22,13 @@ namespace sv
 		int label;//terminal node class label +, - or 0 if not terminal
 		std::string split_rule_name;
 		int split_rule_index = -1;
+		int node_number;
 
 		/**
 		* Constructors
 		*/
 		node() : children(), pos(0), neg(0), num_samples(0), label(0) {}
-		node(int p, int n, int l = 0);
+		node(int p, int n, int num = 0, int l = 0);
 
 		void add_node(int p, int n);
 

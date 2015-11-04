@@ -60,15 +60,17 @@ int main()
 		data.push_back(s);
 	}	
 
+	std::ofstream of("output.txt");
+
 	//create/build tree
 	sv::id3_tree id3(data, features);
+	id3.print_tree(of);
 
-	int r1 = id3.apply_tree({ {"rain", "mild", "normal", "strong"} });//no
-	int r2 = id3.apply_tree({ { "sunny", "mild", "normal", "strong" } });//yes
-	int r3 = id3.apply_tree({ { "overcast", "mild", "normal", "strong" } });//yes
-	int r4 = id3.apply_tree({ { "sunny", "hot", "high", "strong" } });//no
-	int r5 = id3.apply_tree({ { "rain", "mild", "normal", "weak" } });//yes
+	//test tree
+	of << "\n ********** Testing *********" << std::endl;
+	of << " Testing case: Sunny Mild Normal Strong" << std::endl;
+	//int r = id3.apply_tree({ { "rain", "mild", "normal", "strong" } }, of);//don't play tennis
+	int r = id3.apply_tree({ { "sunny", "mild", "normal", "strong" } }, of);
 
-	std::cout << "Test 1: " << r1 << ", Test 2: " << r2 << ", Test 3: " << r3 << std::endl;
-	std::cout << "Test 4: " << r4 << ", Test 5: " << r5 << std::endl;
+	of << " Will" << ((r == -1)?" not":"") << " play tennis on such a day" << std::endl;
 }

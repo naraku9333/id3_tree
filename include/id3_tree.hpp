@@ -34,6 +34,7 @@ namespace sv
 		std::vector<sample> data;
 		std::vector<std::string> features;
 		std::map<std::string, std::set<std::string>> feature_to_values;
+		static int num_nodes;
 		
 	public:
 		/**
@@ -67,7 +68,8 @@ namespace sv
 		/**
 		* Print the tree structure to stdout
 		*/
-		void print_tree();
+		void print_tree(std::ostream& os = std::cout);
+		void print_tree(node* r, std::ostream& os = std::cout);
 
 		/**
 		* Apply a sample to tree
